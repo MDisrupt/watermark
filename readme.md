@@ -29,6 +29,7 @@ after making changes.
 
 ```shell
 cd web
+yarn install
 yarn api:sync
 ```
 
