@@ -1,0 +1,52 @@
+plugins {
+	id 'org.springframework.boot' version '2.6.3'
+	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+	id 'java'
+	id 'groovy'
+    id 'com.google.cloud.tools.jib' version '3.2.0'
+	id 'com.diffplug.spotless' version '5.13.0'
+}
+
+group = 'com.mdisrupt'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '11'
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-data-rest'
+	implementation 'org.apache.pdfbox:pdfbox:2.0.22'
+	implementation 'org.springdoc:springdoc-openapi-ui:1.6.6'
+	implementation 'org.springdoc:springdoc-openapi-data-rest:1.6.6'
+	compileOnly 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}
+
+jib {
+    from.image = "gcr.io/distroless/java-debian10:11-nonroot@sha256:2d96a9a913bf3923f504dca3e91260371591bac0e679d30a9ab19cece86dcf25"
+    container.mainClass = "com.mdisrupt.watermark.WatermarkApplication"
+    to.image = "mdisrupt/watermark"
+}
+
+spotless {
+  java {
+    importOrder()
+    googleJavaFormat()
+  }
+  groovy {
+    greclipse()
+  }
+}
